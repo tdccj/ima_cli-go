@@ -1,4 +1,6 @@
-# ima-cli
+# AI_imaCli
+
+> 本项目由AI生成。
 
 通过命令行管理 IMA 笔记和知识库。Go 实现，零外部依赖。
 
@@ -29,7 +31,7 @@ echo "your_client_id" > ~/.config/ima/client_id
 echo "your_api_key" > ~/.config/ima/api_key
 ```
 
-> 凭证获取：打开 https://ima.qq.com/agent-interface
+> 凭证获取：打开 <https://ima.qq.com/agent-interface>
 
 ## 知识库命令
 
