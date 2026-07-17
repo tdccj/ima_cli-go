@@ -9,7 +9,10 @@
 ```bash
 git clone <repo-url>
 cd ima-cli
+# 开发版本
 go build -o ima .
+# 发布版本（注入版本号）
+# go build -ldflags "-X main.Version=1.0.0" -o ima .
 # 推荐将 ima 加入 PATH
 # cp ima /usr/local/bin/
 ```

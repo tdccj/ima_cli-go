@@ -22,9 +22,14 @@ import (
 	"github.com/user/ima-cli/internal/notes"
 )
 
+// Version 在编译时通过 ldflags 注入，如：
+//
+//	go build -ldflags "-X main.Version=1.0.0" -o ima .
+var Version = "1.0.1"
+
 // usage 打印 CLI 帮助信息。
 func usage() {
-		fmt.Fprintf(os.Stderr, `IMA CLI — 通过命令行管理 IMA 笔记和知识库
+		fmt.Fprintf(os.Stderr, `IMA CLI %s — 通过命令行管理 IMA 笔记和知识库
 
 用法:
   ima <command> [选项]
@@ -51,12 +56,15 @@ func usage() {
   ima notes create <title> <content>    创建笔记
   ima notes append <note-id> <content>  追加内容到笔记
 
+其他:
+  version 或 -version          显示版本信息
+
 环境变量:
   IMA_OPENAPI_CLIENTID  或 IMA_CLIENT_ID     Client ID
   IMA_OPENAPI_APIKEY    或 IMA_API_KEY       API Key
 
 配置目录: ~/.config/ima/client_id 和 ~/.config/ima/api_key
-`)
+`, Version)
 }
 
 // printErr 输出错误信息并退出程序。
@@ -66,8 +74,14 @@ func printErr(msg string) {
 }
 
 func main() {
+	versionFlag := flag.Bool("version", false, "显示版本信息")
 	flag.Usage = usage
 	flag.Parse()
+
+	if *versionFlag {
+		fmt.Printf("ima-cli version %s\n", Version)
+		return
+	}
 
 	args := flag.Args()
 	if len(args) < 1 {
@@ -88,6 +102,8 @@ func main() {
 	switch args[0] {
 	case "help":
 		usage()
+	case "version":
+		fmt.Printf("ima-cli version %s\n", Version)
 	case "notes":
 		runNotes(cli, args[1:])
 	case "alias":

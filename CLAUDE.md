@@ -26,5 +26,9 @@ Go CLI for IMA notes and knowledge base management.
 ## Build
 
 ```bash
+# 开发版本
 go build -o ima .
+
+# 发布版本（注入版本号）
+go build -ldflags "-X main.Version=1.0.0" -o ima .
 ```
