@@ -102,7 +102,7 @@ func TestRunListWithoutAlias(t *testing.T) {
 
 func TestCommandList(t *testing.T) {
 	// 验证顶层命令名称均枚举在文档中（编译期检查）
-	commands := []string{"help", "notes", "alias", "list", "info", "browse",
+	commands := []string{"help", "notes", "alias", "list", "count", "info", "browse",
 		"search", "upload", "url", "get-media"}
 	_ = commands
 

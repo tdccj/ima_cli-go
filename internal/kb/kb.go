@@ -244,6 +244,41 @@ func GetKBInfo(cli *ima.Client, kbID string) error {
 	return nil
 }
 
+// ContentCount 知识库内容数量统计。
+type ContentCount struct {
+	Files   int64 `json:"files"`
+	Folders int64 `json:"folders"`
+	Total   int64 `json:"total"`
+}
+
+// CountKBContent 获取知识库根目录的内容数量统计。
+func CountKBContent(cli *ima.Client, kbID string) (*ContentCount, error) {
+	resp, err := cli.Post("openapi/wiki/v1/get_knowledge_list", ima.RequestBody{
+		"cursor":            "",
+		"limit":             1,
+		"knowledge_base_id": kbID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var files, folders int64
+	if fiRaw, ok := resp.Data["folder_info"]; ok {
+		fiJSON, _ := json.Marshal(fiRaw)
+		var fi ima.FolderInfo
+		if err := json.Unmarshal(fiJSON, &fi); err == nil {
+			files = fi.FileNumber
+			folders = fi.FolderNumber
+		}
+	}
+
+	return &ContentCount{
+		Files:   files,
+		Folders: folders,
+		Total:   files + folders,
+	}, nil
+}
+
 // BrowseKB 浏览知识库的内容（文件和文件夹）。
 // folderID 为空时列出根目录。
 func BrowseKB(cli *ima.Client, kbID, folderID string) error {

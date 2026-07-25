@@ -25,7 +25,7 @@ import (
 // Version 在编译时通过 ldflags 注入，如：
 //
 //	go build -ldflags "-X main.Version=1.0.0" -o ima .
-var Version = "1.0.2"
+var Version = "1.0.3"
 
 // usage 打印 CLI 帮助信息。
 func usage() {
@@ -36,6 +36,7 @@ func usage() {
 
 知识库命令:
   list                         列出可添加的知识库
+  count                        统计各知识库的内容数量
   info <kb-id>                 获取知识库信息
   browse <kb-id> [--folder-id]     浏览知识库内容
   search <kb-id> <query>       搜索知识库
@@ -110,6 +111,8 @@ func main() {
 		runAlias(args[1:])
 	case "list":
 		runList(cli)
+	case "count":
+		runCount(cli)
 	case "info":
 		if len(args) < 2 {
 			printErr("用法: ima info <kb-id>")
@@ -238,6 +241,51 @@ func runList(cli *ima.Client) {
 		}
 		out = append(out, ia)
 	}
+	b, _ := json.MarshalIndent(out, "", "  ")
+	fmt.Println(string(b))
+}
+
+// runCount 统计各知识库的内容数量并以 JSON 格式输出。
+func runCount(cli *ima.Client) {
+	list, err := kb.GetKBList(cli)
+	if err != nil {
+		printErr(err.Error())
+	}
+
+	aliases, _ := alias.Load()
+	aliasByName := make(map[string]string)
+	for name, id := range aliases {
+		aliasByName[id] = name
+	}
+
+	type countItem struct {
+		ID      string `json:"id"`
+		Name    string `json:"name"`
+		Alias   string `json:"alias,omitempty"`
+		Files   int64  `json:"files"`
+		Folders int64  `json:"folders"`
+		Total   int64  `json:"total"`
+	}
+
+	var out []countItem
+	for _, item := range list {
+		cc, err := kb.CountKBContent(cli, item.ID)
+		if err != nil {
+			printErr(err.Error())
+		}
+		ci := countItem{
+			ID:      item.ID,
+			Name:    item.Name,
+			Files:   cc.Files,
+			Folders: cc.Folders,
+			Total:   cc.Total,
+		}
+		if a, ok := aliasByName[item.ID]; ok {
+			ci.Alias = a
+		}
+		out = append(out, ci)
+	}
+
 	b, _ := json.MarshalIndent(out, "", "  ")
 	fmt.Println(string(b))
 }
