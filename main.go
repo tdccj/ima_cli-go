@@ -1,4 +1,4 @@
-// ima-cli 是一个通过命令行管理 IMA 笔记和知识库的工具。
+// ima_cli-go 是一个通过命令行管理 IMA 笔记和知识库的工具。
 //
 // 命令结构：
 //   - 知识库命令直接挂在顶层：ima list, ima info, ima browse, ima search, ima upload, ima url, ima get-media
@@ -15,21 +15,21 @@ import (
 	"os"
 	"strings"
 
-	"github.com/user/ima-cli/internal/alias"
-	"github.com/user/ima-cli/internal/config"
-	"github.com/user/ima-cli/internal/ima"
-	"github.com/user/ima-cli/internal/kb"
-	"github.com/user/ima-cli/internal/notes"
+	"ima_cli-go/internal/alias"
+	"ima_cli-go/internal/config"
+	"ima_cli-go/internal/ima"
+	"ima_cli-go/internal/kb"
+	"ima_cli-go/internal/notes"
 )
 
 // Version 在编译时通过 ldflags 注入，如：
 //
 //	go build -ldflags "-X main.Version=1.0.0" -o ima .
-var Version = "1.0.1"
+var Version = "1.0.2"
 
 // usage 打印 CLI 帮助信息。
 func usage() {
-		fmt.Fprintf(os.Stderr, `IMA CLI %s — 通过命令行管理 IMA 笔记和知识库
+		fmt.Fprintf(os.Stderr, `ima_cli-go %s — 通过命令行管理 IMA 笔记和知识库
 
 用法:
   ima <command> [选项]
@@ -79,7 +79,7 @@ func main() {
 	flag.Parse()
 
 	if *versionFlag {
-		fmt.Printf("ima-cli version %s\n", Version)
+		fmt.Printf("ima_cli-go version %s\n", Version)
 		return
 	}
 
@@ -103,7 +103,7 @@ func main() {
 	case "help":
 		usage()
 	case "version":
-		fmt.Printf("ima-cli version %s\n", Version)
+		fmt.Printf("ima_cli-go version %s\n", Version)
 	case "notes":
 		runNotes(cli, args[1:])
 	case "alias":

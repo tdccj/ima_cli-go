@@ -1,4 +1,4 @@
-# ima-cli
+# ima_cli-go
 
 Go CLI for IMA notes and knowledge base management.
 

@@ -27,7 +27,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/user/ima-cli/internal/ima"
+	"ima_cli-go/internal/ima"
 )
 
 // cosDefaultTimeout COS 上传超时时间（5 分钟），大文件可通过此值调整。

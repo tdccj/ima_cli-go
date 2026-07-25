@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/user/ima-cli/internal/config"
-	"github.com/user/ima-cli/internal/ima"
+	"ima_cli-go/internal/config"
+	"ima_cli-go/internal/ima"
 )
 
 // testClient 创建一个指向测试服务器的 IMA 客户端。

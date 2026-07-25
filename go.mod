@@ -1,3 +1,3 @@
-module github.com/user/ima-cli
+module ima_cli-go
 
 go 1.26

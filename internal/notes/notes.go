@@ -13,7 +13,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/user/ima-cli/internal/ima"
+	"ima_cli-go/internal/ima"
 )
 
 // ListNotebooks 列出当前用户的所有笔记本（note folder）。

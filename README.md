@@ -1,4 +1,4 @@
-# AI_imaCli
+# ima_cli-go
 
 > 本项目由AI生成。
 
@@ -8,7 +8,7 @@
 
 ```bash
 git clone <repo-url>
-cd ima-cli
+cd ima_cli-go
 # 开发版本
 go build -o ima .
 # 发布版本（注入版本号）
@@ -181,5 +181,5 @@ $ ima upload xxx report.pdf
 $ ima notes search Go语言
 
 # 创建笔记
-$ ima notes create 今日计划 完成ima-cli开发
+$ ima notes create 今日计划 ima_cli-go开发
 ```
