@@ -105,6 +105,23 @@ func Add(name, kbID string) error {
 	return save(s)
 }
 
+// Update 更新指定别名对应的知识库 ID。如果别名不存在则返回错误。
+func Update(name, kbID string) error {
+	if err := validateKnowledgeBaseID(kbID); err != nil {
+		return err
+	}
+
+	s, err := Load()
+	if err != nil {
+		return err
+	}
+	if _, exists := s[name]; !exists {
+		return fmt.Errorf("别名 '%s' 不存在", name)
+	}
+	s[name] = kbID
+	return save(s)
+}
+
 // Remove 删除指定名称的别名。如果别名不存在则返回错误。
 func Remove(name string) error {
 	s, err := Load()
@@ -132,7 +149,7 @@ func Resolve(input string) (string, error) {
 	}
 	if id, ok := s[input]; ok {
 		if err := validateKnowledgeBaseID(id); err != nil {
-			return "", fmt.Errorf("别名 %q 保存的知识库 ID 无效或已过期；请运行 ima list 获取最新 ID，再执行 ima alias remove %s 和 ima alias add %s <kb-id> 重新绑定", input, input, input)
+			return "", fmt.Errorf("别名 %q 保存的知识库 ID 无效或已过期；请运行 ima list 获取最新 ID，再执行 ima alias update %s <kb-id> 重新绑定", input, input)
 		}
 		return id, nil
 	}

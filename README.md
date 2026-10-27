@@ -108,6 +108,9 @@ ima get-media <media-id>
 # 添加别名
 ima alias add <名称> <kb-id>
 
+# 更新别名对应的知识库 ID
+ima alias update <名称> <新kb-id>
+
 # 列出所有别名
 ima alias list
 
@@ -121,8 +124,7 @@ ima alias remove <名称>
 
 ```bash
 ima list
-ima alias remove <名称>
-ima alias add <名称> <最新kb-id>
+ima alias update <名称> <最新kb-id>
 ```
 
 ## 笔记命令

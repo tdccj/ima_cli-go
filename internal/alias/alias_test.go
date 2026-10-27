@@ -76,6 +76,55 @@ func TestAddDuplicate(t *testing.T) {
 	}
 }
 
+func TestUpdate(t *testing.T) {
+	_, cleanup := testStore(t)
+	defer cleanup()
+
+	if err := Add("dev", testKBID); err != nil {
+		t.Fatalf("Add 失败: %v", err)
+	}
+	if err := Update("dev", testKBID2); err != nil {
+		t.Fatalf("Update 失败: %v", err)
+	}
+
+	got, err := Resolve("dev")
+	if err != nil {
+		t.Fatalf("Resolve 失败: %v", err)
+	}
+	if got != testKBID2 {
+		t.Errorf("更新后的知识库 ID 为 %q，期望 %q", got, testKBID2)
+	}
+}
+
+func TestUpdateNonexistent(t *testing.T) {
+	_, cleanup := testStore(t)
+	defer cleanup()
+
+	if err := Update("nonexistent", testKBID); err == nil {
+		t.Fatal("更新不存在的别名应返回错误")
+	}
+}
+
+func TestUpdateRejectsInvalidKnowledgeBaseID(t *testing.T) {
+	_, cleanup := testStore(t)
+	defer cleanup()
+
+	if err := Add("dev", testKBID); err != nil {
+		t.Fatalf("Add 失败: %v", err)
+	}
+	if err := Update("dev", "legacy-id"); err == nil {
+		t.Fatal("更新为旧格式知识库 ID 应返回错误")
+	}
+
+	got, err := Resolve("dev")
+	if err != nil {
+		t.Fatalf("Resolve 失败: %v", err)
+	}
+	if got != testKBID {
+		t.Errorf("更新失败后知识库 ID 不应改变，得到 %q", got)
+	}
+}
+
 func TestRemove(t *testing.T) {
 	dir, cleanup := testStore(t)
 	defer cleanup()

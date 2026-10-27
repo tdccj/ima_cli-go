@@ -3,7 +3,7 @@
 // 命令结构：
 //   - 知识库命令直接挂在顶层：ima list, ima info, ima browse, ima search, ima upload, ima url, ima get-media
 //   - 笔记命令通过 notes 子命令：ima notes list-notebooks, ima notes list, ima notes search, etc.
-//   - 别名管理通过 alias 子命令：ima alias add, ima alias list, ima alias remove
+//   - 别名管理通过 alias 子命令：ima alias add, ima alias update, ima alias list, ima alias remove
 //
 // 所有 API 调用通过内部的 ima.Client 完成，认证凭证通过环境变量或配置文件加载。
 package main
@@ -46,6 +46,7 @@ func usage() {
 
 别名管理:
   alias add <name> <kb-id>    添加知识库别名
+  alias update <name> <kb-id> 更新别名的知识库 ID
   alias list                  列出所有别名
   alias remove <name>         删除别名
 
@@ -186,7 +187,7 @@ func main() {
 // runAlias 处理别名管理命令。
 func runAlias(args []string) {
 	if len(args) < 1 {
-		printErr("用法: ima alias <add|list|remove> [...]")
+		printErr("用法: ima alias <add|update|list|remove> [...]")
 	}
 
 	switch args[0] {
@@ -198,6 +199,14 @@ func runAlias(args []string) {
 			printErr(err.Error())
 		}
 		fmt.Printf("别名 '%s' 添加成功\n", args[1])
+	case "update":
+		if len(args) < 3 {
+			printErr("用法: ima alias update <name> <kb-id>")
+		}
+		if err := alias.Update(args[1], args[2]); err != nil {
+			printErr(err.Error())
+		}
+		fmt.Printf("别名 '%s' 的知识库 ID 已更新\n", args[1])
 	case "list":
 		s, err := alias.List()
 		if err != nil {

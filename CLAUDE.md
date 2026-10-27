@@ -6,7 +6,7 @@ Go CLI for IMA notes and knowledge base management.
 
 - Knowledge base: `ima list|info|browse|search|upload|url|get-media`
 - Notes: `ima notes list-notebooks|list|search|get|create|append`
-- Alias: `ima alias add|list|remove`
+- Alias: `ima alias add|update|list|remove`
 
 ## Conventions
 
