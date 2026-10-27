@@ -6,10 +6,6 @@
 
 通过命令行管理 IMA 笔记和知识库。Go 实现，零外部依赖。
 
-## 架构概览
-
-![ima_cli-go 架构图](architecture.svg)
-
 ## 安装
 
 ```bash
@@ -199,3 +195,7 @@ $ ima notes search Go语言
 # 创建笔记
 $ ima notes create 今日计划 ima_cli-go开发
 ```
+
+## 架构概览
+
+![ima_cli-go 架构图](architecture.svg)
