@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"unicode"
 )
 
@@ -16,6 +17,15 @@ import (
 type Store map[string]string
 
 const fileName = "aliases.json"
+
+var knowledgeBaseIDPattern = regexp.MustCompile(`^ima_kb_[A-Za-z0-9]{8}$`)
+
+func validateKnowledgeBaseID(kbID string) error {
+	if !knowledgeBaseIDPattern.MatchString(kbID) {
+		return fmt.Errorf("知识库 ID 无效或已过期，有效格式为 ima_kb_XXXXXXXX（XXXXXXXX 为 8 位字母或数字）；请运行 ima list 从最新响应获取 ID")
+	}
+	return nil
+}
 
 // path 返回别名配置文件的完整路径。
 func path() (string, error) {
@@ -72,6 +82,9 @@ func save(s Store) error {
 //   - 只能包含字母、数字、下划线
 //   - 不能与已有别名重名
 func Add(name, kbID string) error {
+	if err := validateKnowledgeBaseID(kbID); err != nil {
+		return err
+	}
 	if len(name) > 10 {
 		return fmt.Errorf("别名长度不能超过 10 个字符")
 	}
@@ -110,16 +123,21 @@ func List() (Store, error) {
 	return Load()
 }
 
-// Resolve 将输入的名称解析为知识库 ID：
-//   - 如果名称是已注册的别名，返回对应的知识库 ID
-//   - 否则原样返回输入字符串（认为它本身就是一个合法的知识库 ID）
+// Resolve 将输入的名称解析为知识库 ID，并拒绝旧格式或无效 ID。
+// 过期 ID 不会被自动重试；调用方必须从最新知识库列表获取新 ID。
 func Resolve(input string) (string, error) {
 	s, err := Load()
 	if err != nil {
-		return input, nil
+		return "", err
 	}
 	if id, ok := s[input]; ok {
+		if err := validateKnowledgeBaseID(id); err != nil {
+			return "", fmt.Errorf("别名 %q 保存的知识库 ID 无效或已过期；请运行 ima list 获取最新 ID，再执行 ima alias remove %s 和 ima alias add %s <kb-id> 重新绑定", input, input, input)
+		}
 		return id, nil
+	}
+	if err := validateKnowledgeBaseID(input); err != nil {
+		return "", err
 	}
 	return input, nil
 }

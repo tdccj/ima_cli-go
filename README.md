@@ -12,7 +12,7 @@ cd ima_cli-go
 # 开发版本
 go build -o ima .
 # 发布版本（注入版本号）
-# go build -ldflags "-X main.Version=1.0.0" -o ima .
+# go build -ldflags "-X main.Version=1.0.4" -o ima .
 # 推荐将 ima 加入 PATH
 # cp ima /usr/local/bin/
 ```
@@ -98,6 +98,8 @@ ima url <kb-id> <网页URL> --folder-id <folder-id>
 ima get-media <media-id>
 ```
 
+以 JSON 输出媒体类型、文件下载或网页访问链接及所需请求头；笔记类型媒体还会返回对应的笔记 ID。
+
 ## 别名管理
 
 为知识库 ID 设置别名，避免记忆长串 ID。
@@ -113,9 +115,15 @@ ima alias list
 ima alias remove <名称>
 ```
 
-别名限制：最长 10 个字符，仅限字母、数字、下划线。
+别名限制：最长 10 个字符，仅限字母、数字、下划线。知识库 ID 必须使用最新格式 `ima_kb_XXXXXXXX`，其中 `XXXXXXXX` 恰好为 8 位字母或数字。
 
-设置后所有知识库命令（info/browse/search/upload/url）的 `kb-id` 参数均可使用别名代替。
+设置后所有知识库命令（info/browse/search/upload/url）的 `kb-id` 参数均可使用别名代替。如果旧别名提示 ID 无效或已过期，请先从最新列表获取 ID 并重新绑定，不要使用原 ID 重试：
+
+```bash
+ima list
+ima alias remove <名称>
+ima alias add <名称> <最新kb-id>
+```
 
 ## 笔记命令
 

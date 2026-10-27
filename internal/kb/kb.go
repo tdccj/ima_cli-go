@@ -152,25 +152,25 @@ func uploadFileToCOS(cred *ima.Credential, filePath string) error {
 
 // mimeTypes 文件扩展名到 MIME 类型的映射表，用于 COS 上传和 API 调用。
 var mimeTypes = map[string]string{
-	".pdf":  "application/pdf",
-	".doc":  "application/msword",
-	".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-	".ppt":  "application/vnd.ms-powerpoint",
-	".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-	".xls":  "application/vnd.ms-excel",
-	".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-	".csv":  "text/csv",
-	".md":   "text/markdown",
-	".png":  "image/png",
-	".jpg":  "image/jpeg",
-	".jpeg": "image/jpeg",
-	".webp": "image/webp",
-	".txt":  "text/plain",
+	".pdf":   "application/pdf",
+	".doc":   "application/msword",
+	".docx":  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	".ppt":   "application/vnd.ms-powerpoint",
+	".pptx":  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+	".xls":   "application/vnd.ms-excel",
+	".xlsx":  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+	".csv":   "text/csv",
+	".md":    "text/markdown",
+	".png":   "image/png",
+	".jpg":   "image/jpeg",
+	".jpeg":  "image/jpeg",
+	".webp":  "image/webp",
+	".txt":   "text/plain",
 	".xmind": "application/x-xmind",
-	".mp3":  "audio/mpeg",
-	".m4a":  "audio/x-m4a",
-	".wav":  "audio/wav",
-	".aac":  "audio/aac",
+	".mp3":   "audio/mpeg",
+	".m4a":   "audio/x-m4a",
+	".wav":   "audio/wav",
+	".aac":   "audio/aac",
 }
 
 // detectContentType 根据文件扩展名推断 MIME 类型。
@@ -319,12 +319,14 @@ func SearchKB(cli *ima.Client, kbID, query string) error {
 
 // AddURL 添加网页 URL 到知识库。folderID 为空时添加到根目录。
 func AddURL(cli *ima.Client, kbID, folderID, url string) error {
+	if folderID == "" {
+		// import_urls 要求根目录的 folder_id 等于 knowledge_base_id。
+		folderID = kbID
+	}
 	body := ima.RequestBody{
 		"knowledge_base_id": kbID,
+		"folder_id":         folderID,
 		"urls":              []string{url},
-	}
-	if folderID != "" {
-		body["folder_id"] = folderID
 	}
 
 	resp, err := cli.Post("openapi/wiki/v1/import_urls", body)

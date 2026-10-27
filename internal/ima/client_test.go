@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"ima_cli-go/internal/config"
@@ -68,6 +69,27 @@ func TestPostBusinessError(t *testing.T) {
 	_, err := client.Post("test/path", nil)
 	if err == nil {
 		t.Fatal("应返回业务错误，但未返回")
+	}
+}
+
+func TestPostOutdatedKnowledgeBaseID(t *testing.T) {
+	requests := 0
+	client, server := testClient(t, func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"code":220004,"msg":"invalid or outdated knowledge_base_id","data":{}}`))
+	})
+	defer server.Close()
+
+	_, err := client.Post("openapi/wiki/v1/get_knowledge_list", RequestBody{"knowledge_base_id": "ima_kb_Abc12345"})
+	if err == nil {
+		t.Fatal("过期知识库 ID 应返回错误")
+	}
+	if requests != 1 {
+		t.Fatalf("不应使用同一 ID 自动重试，请求次数 = %d", requests)
+	}
+	if !strings.Contains(err.Error(), "ima list") || !strings.Contains(err.Error(), "不要") {
+		t.Errorf("错误应包含刷新 ID 指引，得到: %v", err)
 	}
 }
 

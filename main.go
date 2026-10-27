@@ -24,12 +24,12 @@ import (
 
 // Version 在编译时通过 ldflags 注入，如：
 //
-//	go build -ldflags "-X main.Version=1.0.0" -o ima .
-var Version = "1.0.3"
+//	go build -ldflags "-X main.Version=1.0.4" -o ima .
+var Version = "1.0.4"
 
 // usage 打印 CLI 帮助信息。
 func usage() {
-		fmt.Fprintf(os.Stderr, `ima_cli-go %s — 通过命令行管理 IMA 笔记和知识库
+	fmt.Fprintf(os.Stderr, `ima_cli-go %s — 通过命令行管理 IMA 笔记和知识库
 
 用法:
   ima <command> [选项]
@@ -65,6 +65,7 @@ func usage() {
   IMA_OPENAPI_APIKEY    或 IMA_API_KEY       API Key
 
 配置目录: ~/.config/ima/client_id 和 ~/.config/ima/api_key
+知识库 ID 格式: ima_kb_XXXXXXXX（8 位字母或数字），请通过 ima list 获取最新 ID
 `, Version)
 }
 
@@ -72,6 +73,15 @@ func usage() {
 func printErr(msg string) {
 	fmt.Fprintln(os.Stderr, "错误:", msg)
 	os.Exit(1)
+}
+
+// mustResolveKBID 解析并校验知识库 ID，禁止使用旧格式或过期别名继续请求。
+func mustResolveKBID(input string) string {
+	id, err := alias.Resolve(input)
+	if err != nil {
+		printErr(err.Error())
+	}
+	return id
 }
 
 func main() {
@@ -117,7 +127,7 @@ func main() {
 		if len(args) < 2 {
 			printErr("用法: ima info <kb-id>")
 		}
-		id, _ := alias.Resolve(args[1])
+		id := mustResolveKBID(args[1])
 		if err := kb.GetKBInfo(cli, id); err != nil {
 			printErr(err.Error())
 		}
@@ -125,18 +135,17 @@ func main() {
 		if len(args) < 2 {
 			printErr("用法: ima browse <kb-id> [--folder-id <id>]")
 		}
-		id, _ := alias.Resolve(args[1])
 		fs := flag.NewFlagSet("browse", flag.ExitOnError)
 		folderID := fs.String("folder-id", "", "文件夹 ID")
 		fs.Parse(args[2:])
-		if err := kb.BrowseKB(cli, id, *folderID); err != nil {
+		if err := kb.BrowseKB(cli, mustResolveKBID(args[1]), *folderID); err != nil {
 			printErr(err.Error())
 		}
 	case "search":
 		if len(args) < 3 {
 			printErr("用法: ima search <kb-id> <query>")
 		}
-		id, _ := alias.Resolve(args[1])
+		id := mustResolveKBID(args[1])
 		if err := kb.SearchKB(cli, id, strings.Join(args[2:], " ")); err != nil {
 			printErr(err.Error())
 		}
@@ -144,7 +153,7 @@ func main() {
 		if len(args) < 3 {
 			printErr("用法: ima upload <kb-id> <file-path> [--folder-id <id>]")
 		}
-		id, _ := alias.Resolve(args[1])
+		id := mustResolveKBID(args[1])
 		fs := flag.NewFlagSet("upload", flag.ExitOnError)
 		folderID := fs.String("folder-id", "", "文件夹 ID")
 		fs.Parse(args[3:])
@@ -155,7 +164,7 @@ func main() {
 		if len(args) < 3 {
 			printErr("用法: ima url <kb-id> <url> [--folder-id <id>]")
 		}
-		id, _ := alias.Resolve(args[1])
+		id := mustResolveKBID(args[1])
 		fs := flag.NewFlagSet("url", flag.ExitOnError)
 		folderID := fs.String("folder-id", "", "文件夹 ID")
 		fs.Parse(args[3:])

@@ -20,6 +20,7 @@ Go CLI for IMA notes and knowledge base management.
 - `internal/config/` — credential loading
 - `internal/alias/` — kb-id alias system
 - Credentials: env vars `IMA_OPENAPI_CLIENTID`/`IMA_OPENAPI_APIKEY` → `~/.config/ima/` files
+- Knowledge base IDs must match `ima_kb_XXXXXXXX` (8 alphanumeric characters); refresh stale IDs with `ima list` and never auto-retry the same ID
 - File upload flow: create_media → COS PUT → add_knowledge
 - `--folder-id` flag available for browse/upload/url/notes list
 
@@ -30,5 +31,5 @@ Go CLI for IMA notes and knowledge base management.
 go build -o ima .
 
 # 发布版本（注入版本号）
-go build -ldflags "-X main.Version=1.0.0" -o ima .
+go build -ldflags "-X main.Version=1.0.4" -o ima .
 ```

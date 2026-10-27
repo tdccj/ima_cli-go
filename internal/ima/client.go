@@ -27,8 +27,8 @@ type Client struct {
 // NewClient 创建一个新的 IMA API 客户端。
 func NewClient(creds *config.Credentials) *Client {
 	return &Client{
-		BaseURL: DefaultBaseURL,
-		Creds:   creds,
+		BaseURL:    DefaultBaseURL,
+		Creds:      creds,
 		httpClient: &http.Client{Timeout: 60 * time.Second},
 	}
 }
@@ -91,6 +91,9 @@ func (c *Client) Post(apiPath string, body RequestBody) (*APIResponse, error) {
 
 	// 业务错误检查
 	if apiResp.Code != 0 {
+		if apiResp.Code == 220004 {
+			return nil, fmt.Errorf("API 错误 (%d): %s；请运行 ima list 获取最新知识库 ID，使用别名时请重新绑定；不要使用原 ID 重试", apiResp.Code, apiResp.Msg)
+		}
 		return nil, fmt.Errorf("API 错误 (%d): %s", apiResp.Code, apiResp.Msg)
 	}
 

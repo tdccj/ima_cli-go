@@ -247,8 +247,8 @@ func TestAddURL(t *testing.T) {
 		if len(urls) != 1 || urls[0] != "https://example.com" {
 			t.Error("url 参数不正确")
 		}
-		if _, ok := body["folder_id"]; ok {
-			t.Error("空 folder_id 时不应发送该字段")
+		if body["folder_id"] != "kb1" {
+			t.Errorf("根目录 folder_id = %v，期望与 knowledge_base_id 相同", body["folder_id"])
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Write([]byte(`{"code":0,"msg":"ok","data":{"results":{"https://example.com":{"url":"https://example.com","ret_code":0}}}}`))
