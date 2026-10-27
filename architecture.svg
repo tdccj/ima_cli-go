@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 720" width="1020" height="720">
+  <style>
+    text { font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  </style>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1020" height="720" fill="#ffffff"/>
+  <text x="510" y="32" text-anchor="middle" font-size="18" font-weight="600" fill="#111827">ima_cli-go — IMA 笔记与知识库 CLI 架构图</text>
+  <rect x="40" y="48" width="940" height="112" rx="10" fill="#fafafa" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5 3"/>
+  <text x="52" y="66" font-size="12" fill="#6b7280">CLI 入口层 · package main</text>
+  <rect x="60" y="72" width="900" height="76" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="510" y="96" text-anchor="middle" font-size="15" font-weight="600" fill="#111827">main.go — 命令入口与 flag 路由</text>
+  <text x="510" y="116" text-anchor="middle" font-size="11" fill="#6b7280">知识库: list count info browse search upload url get-media   ·   别名: alias add/update/list/remove   ·   版本: version</text>
+  <text x="510" y="133" text-anchor="middle" font-size="11" fill="#6b7280">笔记: notes list-notebooks / list / search / get / create / append</text>
+  <rect x="40" y="196" width="940" height="116" rx="10" fill="#fafafa" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5 3"/>
+  <text x="52" y="212" font-size="12" fill="#6b7280">业务模块 · internal/</text>
+  <rect x="40" y="224" width="150" height="72" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="115" y="248" text-anchor="middle" font-size="13" font-weight="600" fill="#111827">凭证来源</text>
+  <text x="115" y="268" text-anchor="middle" font-size="11" fill="#6b7280">IMA_OPENAPI_* 环境变量</text>
+  <text x="115" y="286" text-anchor="middle" font-size="10" fill="#6b7280">~/.config/ima/{client_id,api_key}</text>
+  <rect x="215" y="224" width="160" height="72" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="295" y="248" text-anchor="middle" font-size="13" font-weight="600" fill="#111827">config</text>
+  <text x="295" y="268" text-anchor="middle" font-size="11" fill="#6b7280">凭证加载</text>
+  <text x="295" y="286" text-anchor="middle" font-size="10" fill="#6b7280">Load() → Credentials</text>
+  <rect x="400" y="224" width="160" height="72" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="480" y="248" text-anchor="middle" font-size="13" font-weight="600" fill="#111827">alias</text>
+  <text x="480" y="268" text-anchor="middle" font-size="11" fill="#6b7280">kb-id 别名系统</text>
+  <text x="480" y="286" text-anchor="middle" font-size="10" fill="#6b7280">add/update/list/remove/resolve</text>
+  <rect x="585" y="224" width="175" height="72" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="672" y="248" text-anchor="middle" font-size="13" font-weight="600" fill="#111827">kb</text>
+  <text x="672" y="268" text-anchor="middle" font-size="11" fill="#6b7280">知识库 API + COS 上传</text>
+  <text x="672" y="286" text-anchor="middle" font-size="10" fill="#6b7280">create_media → PUT → add</text>
+  <rect x="785" y="224" width="195" height="72" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="882" y="248" text-anchor="middle" font-size="13" font-weight="600" fill="#111827">notes</text>
+  <text x="882" y="268" text-anchor="middle" font-size="11" fill="#6b7280">笔记 API</text>
+  <text x="882" y="286" text-anchor="middle" font-size="10" fill="#6b7280">list / search / get / create / append</text>
+  <rect x="60" y="340" width="900" height="84" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="510" y="366" text-anchor="middle" font-size="15" font-weight="600" fill="#1e40af">internal/ima — HTTP 客户端 · 类型定义</text>
+  <text x="510" y="390" text-anchor="middle" font-size="11" fill="#6b7280">Client · NewClient(creds) · Post(path, RequestBody) · Credential · GetString · 统一签名与请求封装</text>
+  <text x="510" y="408" text-anchor="middle" font-size="11" fill="#6b7280">被 config / kb / notes 复用，所有 IMA OpenAPI 调用经由此处</text>
+  <rect x="60" y="480" width="430" height="100" rx="8" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="275" y="508" text-anchor="middle" font-size="14" font-weight="600" fill="#2563eb">IMA OpenAPI</text>
+  <text x="275" y="532" text-anchor="middle" font-size="11" fill="#6b7280">openapi/kb/v1/… · openapi/note/v1/…</text>
+  <text x="275" y="552" text-anchor="middle" font-size="11" fill="#6b7280">HTTPS 请求 · JSON 响应</text>
+  <rect x="550" y="480" width="410" height="100" rx="8" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="755" y="508" text-anchor="middle" font-size="14" font-weight="600" fill="#dc2626">腾讯云 COS</text>
+  <text x="755" y="532" text-anchor="middle" font-size="11" fill="#6b7280">PUT Object · HMAC-SHA1 签名</text>
+  <text x="755" y="552" text-anchor="middle" font-size="11" fill="#6b7280">文件上传存储</text>
+  <line x1="295" y1="148" x2="295" y2="224" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="480" y1="148" x2="480" y2="224" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="672" y1="148" x2="672" y2="224" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="882" y1="148" x2="882" y2="224" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="190" y1="260" x2="215" y2="260" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrow-purple)"/>
+  <line x1="295" y1="296" x2="295" y2="340" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrow-purple)"/>
+  <line x1="672" y1="296" x2="672" y2="340" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="882" y1="296" x2="882" y2="340" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <line x1="275" y1="424" x2="275" y2="480" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="285" y="455" font-size="11" fill="#2563eb">POST /openapi/…</text>
+  <path d="M 672 296 V 330 H 985 V 530 H 960" fill="none" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+  <text x="825" y="322" text-anchor="middle" font-size="11" fill="#dc2626">COS PUT · 文件上传</text>
+  <line x1="40" y1="642" x2="70" y2="642" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="80" y="646" font-size="11" fill="#6b7280">命令路由 / API 调用</text>
+  <line x1="40" y1="662" x2="70" y2="662" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrow-purple)"/>
+  <text x="80" y="666" font-size="11" fill="#6b7280">凭证读取（环境变量 / 配置文件）</text>
+  <line x1="40" y1="682" x2="70" y2="682" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+  <text x="80" y="686" font-size="11" fill="#6b7280">COS 文件上传</text>
+</svg>

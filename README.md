@@ -1,8 +1,14 @@
 # ima_cli-go
 
+**[📋 查看更新日志](CHANGELOG.md)**
+
 > 本项目由AI生成。
 
 通过命令行管理 IMA 笔记和知识库。Go 实现，零外部依赖。
+
+## 架构概览
+
+![ima_cli-go 架构图](architecture.svg)
 
 ## 安装
 
@@ -12,7 +18,7 @@ cd ima_cli-go
 # 开发版本
 go build -o ima .
 # 发布版本（注入版本号）
-# go build -ldflags "-X main.Version=1.0.4" -o ima .
+# go build -ldflags "-X main.Version=1.0.5" -o ima .
 # 推荐将 ima 加入 PATH
 # cp ima /usr/local/bin/
 ```

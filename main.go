@@ -24,8 +24,8 @@ import (
 
 // Version 在编译时通过 ldflags 注入，如：
 //
-//	go build -ldflags "-X main.Version=1.0.4" -o ima .
-var Version = "1.0.4"
+//	go build -ldflags "-X main.Version=1.0.5" -o ima .
+var Version = "1.0.5"
 
 // usage 打印 CLI 帮助信息。
 func usage() {

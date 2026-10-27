@@ -31,5 +31,5 @@ Go CLI for IMA notes and knowledge base management.
 go build -o ima .
 
 # 发布版本（注入版本号）
-go build -ldflags "-X main.Version=1.0.4" -o ima .
+go build -ldflags "-X main.Version=1.0.5" -o ima .
 ```
